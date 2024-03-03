@@ -19,7 +19,7 @@ const wss = new WebSocket.Server(server, {
     cors: {
         origin: "*",
         credentials: true,
-        methods: ["GET", "POST"],
+        methods: ["GET", "POST", "DELETE",  "PUT", "PATCH", "OPTIONS", "HEAD", "CONNECT", "TRACE", "COPY", "LINK"],
     },
 });
 
