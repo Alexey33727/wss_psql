@@ -80,7 +80,7 @@ wss.on('connection', function connection(ws) {
                     db.query({ text: 'INSERT INTO chatmembers (chat_id, user_id) VALUES ($1, $2)', values: [chatId, userId] });
                 });
 
-                stmt.on('end', () => {
+                db.on('end', () => {
                     ws.emit("message", JSON.stringify({ type: "createChat", success: true }));
                 });
             }
