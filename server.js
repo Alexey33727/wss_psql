@@ -6,13 +6,18 @@ const http = require('http')
 const cors = require('cors');
 
 const app = express()
-app.use(cors({ origin: "http://localhost:5173" }))
+app.use(cors({ origin: "*" }))
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // Разрешить доступ с любого источника
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 const server = http.createServer(app)
 
 const wss = new WebSocket.Server(server, {
     maxHttpBufferSize: 20000000 * 1024, // 20000MB
     cors: {
-        origin: "http://localhost:5173",
+        origin: "*",
         methods: ["GET", "POST"],
     },
 });
