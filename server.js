@@ -19,7 +19,7 @@ const wss = new WebSocket.Server(server, {
     cors: {
         origin: "*",
         credentials: true,
-        methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS", "HEAD", "CONNECT", "TRACE", "COPY", "LINK"],
+        methods: ["GET", "POST", "DELETE",  "PUT", "PATCH", "OPTIONS", "HEAD", "CONNECT", "TRACE", "COPY", "LINK"],
     },
 });
 
@@ -57,38 +57,9 @@ wss.on('connection', function connection(ws) {
 
 
     //! Функция для создания переписки
-    // function createChat(name, createdBy, users, photo) {
-    //     db.query(
-    //         'INSERT INTO chats (name, created_by, photo) VALUES ($1, $2, $3) RETURNING *',
-    //         [name, createdBy, photo],
-    //         (err, res) => {
-    //             if (err) {
-    //                 console.error(err.message);
-    //                 ws.emit("message", JSON.stringify({ success: false, error: err.message }));
-    //                 return;
-    //             }
-
-    //             const chatId = res.rows[0].id;
-
-    //             // Вставка данных в таблицу "chatmembers"
-    //             const stmt = db.query(
-    //                 'INSERT INTO chatmembers (chat_id, user_id) VALUES ($1, $2)',
-    //                 (userId) => [chatId, userId]
-    //             );
-
-    //             users.forEach((userId) => {
-    //                 stmt.query({ text: 'INSERT INTO chatmembers (chat_id, user_id) VALUES ($1, $2)', values: [chatId, userId] });
-    //             });
-
-    //             stmt.on('end', () => {
-    //                 ws.emit("message", JSON.stringify({ type: "createChat", success: true }));
-    //             });
-    //         }
-    //     );
-    // }
     function createChat(name, createdBy, users, photo) {
         db.query(
-            'INSERT INTO chats (name, created_by, photo) VALUES ($1, $2, $3) RETURNING id',
+            'INSERT INTO chats (name, created_by, photo) VALUES ($1, $2, $3) RETURNING *',
             [name, createdBy, photo],
             (err, res) => {
                 if (err) {
@@ -99,25 +70,23 @@ wss.on('connection', function connection(ws) {
 
                 const chatId = res.rows[0].id;
 
-                const insertChatMemberQueries = users.map((userId) => {
-                    return {
-                        text: 'INSERT INTO chatmembers (chat_id, user_id) VALUES ($1, $2)',
-                        values: [chatId, userId],
-                    };
+                // Вставка данных в таблицу "chatmembers"
+                // const stmt = db.query(
+                //     'INSERT INTO chatmembers (chat_id, user_id) VALUES ($1, $2)',
+                //     (userId) => [chatId, userId]
+                // );
+
+                users.forEach((userId) => {
+                    db.query({ text: 'INSERT INTO chatmembers (chat_id, user_id) VALUES ($1, $2)', values: [chatId, userId] });
                 });
 
-                db.query(insertChatMemberQueries, (err, res) => {
-                    if (err) {
-                        console.error(err.message);
-                        ws.emit("message", JSON.stringify({ success: false, error: err.message }));
-                        return;
-                    }
-
+                stmt.on('end', () => {
                     ws.emit("message", JSON.stringify({ type: "createChat", success: true }));
                 });
             }
         );
     }
+    
 
 
     //! Функция для отправки сообщений
