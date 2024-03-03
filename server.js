@@ -18,6 +18,7 @@ const wss = new WebSocket.Server(server, {
     maxHttpBufferSize: 20000000 * 1024, // 20000MB
     cors: {
         origin: "*",
+        credentials: true,
         methods: ["GET", "POST"],
     },
 });
