@@ -6,7 +6,7 @@ const http = require('http')
 const cors = require('cors');
 
 const app = express()
-app.use(cors({ origin: "*" }))
+app.use(cors({ origin: "http://localhost:5173" }))
 const server = http.createServer(app)
 
 const wss = new WebSocket.Server(server, {
