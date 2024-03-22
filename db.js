@@ -43,10 +43,10 @@ const client = new Client({
     host: 'ep-summer-unit-a5754h7c.us-east-2.aws.neon.tech',
     database: 'messangerDB',
     user: 'lorfi119',
-    password: 'ClP8Yd2gBIqN',
+    password: 'GnjR4e6TcDrp',
     port: 5432,
     ssl: true,
-    connectionString: `postgresql://lorfi119:ClP8Yd2gBIqN@ep-summer-unit-a5754h7c.us-east-2.aws.neon.tech/messangerDB?sslmode=require`,
+    connectionString: `postgresql://lorfi119:GnjR4e6TcDrp@ep-summer-unit-a5754h7c.us-east-2.aws.neon.tech/messangerDB?sslmode=require`,
 });
 
 async function getPgVersion() {
